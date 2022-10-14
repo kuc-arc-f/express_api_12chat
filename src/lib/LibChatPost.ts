@@ -126,8 +126,21 @@ const LibChatPost = {
     try {
       const retArr = { ret: LibConfig.NG_CODE, data: {}}
       const text = `
-      SELECT * FROM public."ChatPost" where id = ${id}
+      SELECT public."ChatPost".id
+      ,public."ChatPost"."chatId"
+      ,public."ChatPost"."userId"
+      ,public."ChatPost".title
+      ,public."ChatPost".body
+      ,public."ChatPost"."createdAt"
+      ,public."ChatPost"."updatedAt"
+      ,public."User".id as "UserId"
+      ,public."User".name as "UserName"
+      FROM public."ChatPost"
+      LEFT OUTER JOIN public."User" ON
+        (public."User".id = public."ChatPost"."userId")
+      WHERE "ChatPost".id = ${id}
       `;
+      //SELECT * FROM public."ChatPost" where id = ${id}
       const result = await LibPg.get(text);
       let data = {};
       if(result.length > 0){

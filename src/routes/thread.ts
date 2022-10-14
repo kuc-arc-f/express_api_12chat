@@ -18,6 +18,21 @@ router.post('/index', async function(req: any, res: any) {
   }
 });
 /******
+* index_chats
+* @param req: any
+*
+* @return object
+*/ 
+router.post('/index_chats', async function(req: any, res: any) {
+  try {
+    const result = await LibThread.index_chats(req);
+    res.json(result);    
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
+  }
+});
+/******
 * search
 * @param req: any
 *

@@ -44,6 +44,45 @@ const LibThread = {
     }          
   },
   /**
+  * index_chats : スレッド リスト(chat単位)
+  * @param
+  *
+  * @return object
+  */  
+  index_chats :async function(req: any): Promise<any>
+  {
+    try {
+      const retArr = { ret: LibConfig.NG_CODE, data: {}}
+      console.log(req.body);
+      const body = req.body;      
+      const text = `
+      SELECT public."Thread".id
+      ,public."Thread"."chatId"
+      ,public."Thread"."chatPostId"
+      ,public."Thread"."userId"
+      ,public."Thread".title
+      ,public."Thread".body
+      ,public."Thread"."createdAt"
+      ,public."Thread"."updatedAt"
+      ,public."User".id as "UserId"
+      ,public."User".name as "UserName"
+      FROM public."Thread"
+        LEFT OUTER JOIN public."User" ON
+        (public."User".id = public."Thread"."userId")
+      WHERE public."Thread"."chatId" = ${body.chatId}
+      ORDER BY public."Thread".id DESC LIMIT ${SEARCH_MAX_RECORD}
+      `;
+      const result = await LibPg.get(text);
+//console.log(result);
+      retArr.ret = LibConfig.OK_CODE;
+      retArr.data = result;
+      return retArr;      
+    } catch (err) {
+      console.error(err);
+      throw new Error('Error , index_chats:' +err);
+    }          
+  },  
+  /**
   * search
   * @param
   *
