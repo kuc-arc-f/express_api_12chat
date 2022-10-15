@@ -194,19 +194,25 @@ console.log(req.body);
     try {
 console.log(req.body);
       const body = req.body;
-      const text = `
+      let text = `
       DELETE FROM public."ChatPost" WHERE id = $1
       RETURNING *
       `;  
-    const values = [body.id]
-    const result = await LibPg.execute(text, values);
+      let values = [body.id]
+      let result = await LibPg.execute(text, values);
 //console.log(result);
+      text = `
+      DELETE FROM public."Thread" WHERE public."Thread"."chatPostId" = $1
+      RETURNING *
+      `; 
+      values = [body.id]
+      result = await LibPg.execute(text, values);
       return {
         ret: LibConfig.OK_CODE, data: result
       };
     } catch (err) {
       console.error(err);
-      throw new Error('Error , addTask: '+ err);
+      throw new Error('Error , delete: '+ err);
     }      
   },             
 }
