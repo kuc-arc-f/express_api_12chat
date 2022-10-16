@@ -1,8 +1,17 @@
 import { exit } from 'process';
 import LibConfig from '../config';
+import LibThread from './LibThread';
+
 require('dotenv').config();
 import LibPg from './LibPg';
 const SEARCH_MAX_RECORD = 500;
+//
+interface ILastPostItem {
+  id: number,
+  createdAt: any,
+  thread: any,
+}
+
 //
 const LibChatPost = {
   /**
@@ -92,7 +101,7 @@ const LibChatPost = {
   {
     try {
       const retArr = { ret: LibConfig.NG_CODE, data: {}}
-//console.log(req.body);
+console.log(req.body);
       const body = req.body;      
       const text = `
       SELECT public."ChatPost".id
@@ -103,10 +112,14 @@ const LibChatPost = {
       `;
       const result = await LibPg.get(text);
 //console.log(result);
-      let row = {};
+      let row: ILastPostItem = {id: 0, createdAt:null, thread: {}};
       if(result.length > 0) {
         row = result[0];
       }
+      //thread
+      const thread = await LibThread.getLastThread(Number(body.chatId));
+//console.log(thread);
+      row.thread = thread;
       retArr.ret = LibConfig.OK_CODE;
       retArr.data = row;
       return retArr;      

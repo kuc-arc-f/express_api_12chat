@@ -155,6 +155,36 @@ const LibThread = {
     }          
   },
   /**
+  * getLastThread
+  * @param chatId: number
+  *
+  * @return object
+  */
+  getLastThread :async function(chatId: number): Promise<any>
+  {
+    try {
+//      const retArr = { ret: LibConfig.NG_CODE, data: {}}
+//console.log(req.body);
+      const text = `
+      SELECT public."Thread".id
+      ,public."Thread"."createdAt"
+      FROM public."Thread"
+      WHERE public."Thread"."chatId" = ${chatId}
+      ORDER BY id DESC LIMIT 1
+      `;
+      const result = await LibPg.get(text);
+//console.log(result);
+      let row = {};
+      if(result.length > 0) {
+        row = result[0];
+      }
+      return row;      
+    } catch (err) {
+      console.error(err);
+      throw new Error('Error , getLastThread:' +err);
+    }          
+  }, 
+  /**
   * getItem
   * @param id: number
   *
@@ -165,7 +195,7 @@ const LibThread = {
     try {
       const retArr = { ret: LibConfig.NG_CODE, data: {}}
       const text = `
-      SELECT * FROM public."ChatPost" where id = ${id}
+      SELECT * FROM public."Thread" where id = ${id}
       `;
       const result = await LibPg.get(text);
       let data = {};

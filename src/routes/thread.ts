@@ -67,6 +67,9 @@ router.post('/get_last_time', async function(req: any, res: any) {
 */ 
 router.get('/show/:id', async function(req: any, res: any) {
   try {
+    console.log(req.params.id);
+    const result = await LibThread.getItem(req.params.id);
+    res.json(result);
   } catch (error) {
     console.error(error);
     res.sendStatus(500);
