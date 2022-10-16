@@ -36,9 +36,12 @@ const LibChatPost = {
       ,public."ChatPost"."updatedAt"
       ,public."User".id as "UserId"
       ,public."User".name as "UserName"
+      ,public."Chat".name as "ChatName"
       FROM public."ChatPost"
         LEFT OUTER JOIN public."User" ON
         (public."User".id = public."ChatPost"."userId")
+      LEFT OUTER JOIN public."Chat" ON
+      (public."Chat".id = public."ChatPost"."chatId")
       WHERE "chatId" = ${body.chatId}
       ORDER BY id DESC LIMIT ${SEARCH_MAX_RECORD}
       `;
