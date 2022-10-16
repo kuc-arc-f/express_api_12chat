@@ -66,9 +66,12 @@ const LibThread = {
       ,public."Thread"."updatedAt"
       ,public."User".id as "UserId"
       ,public."User".name as "UserName"
+      ,public."Chat".name as "ChatName"
       FROM public."Thread"
         LEFT OUTER JOIN public."User" ON
         (public."User".id = public."Thread"."userId")
+        LEFT OUTER JOIN public."Chat" ON
+        (public."Chat".id = public."Thread"."chatId")        
       WHERE public."Thread"."chatId" = ${body.chatId}
       ORDER BY public."Thread".id DESC LIMIT ${SEARCH_MAX_RECORD}
       `;
